@@ -12,10 +12,6 @@ Example commands:
  - "what time is it"
  - "exit" or "stop" to quit
 
-Tips:
- - Speak clearly
- - Wait for "Listening..." before talking
- - Short sentences work best
 ==============================
 """)
 
