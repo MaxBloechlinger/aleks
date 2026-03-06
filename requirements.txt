@@ -1,3 +1,4 @@
 openai-whisper
 sounddevice
 numpy
+pyttsx3python src/main.py
