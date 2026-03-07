@@ -22,6 +22,10 @@ Personal voice assistant for Raspberry Pi.
 - Local command handling
 - Smart home control
 
+# Aleks
+
+Offline voice assistant designed to run on Raspberry Pi.
+
 ## Run
 
 python src/main.py

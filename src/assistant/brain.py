@@ -1,4 +1,5 @@
-def process_command(text: str) -> str:
-    if "time" in text.lower():
-        return "I can't tell time yet."
-    return "Command received."
+from assistant.commands import handle_command
+
+
+def think(text):
+    return handle_command(text)
