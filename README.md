@@ -20,7 +20,7 @@ Personal voice assistant for Raspberry Pi.
 - Wake word detection
 - Speech recognition
 - Local command handling
-- Smart home control
+- Smart home control (LEDs etc.)
 
 # Aleks
 
