@@ -1,2 +1,4 @@
-pyttsx3
 openai-whisper
+sounddevice
+pyttsx3
+numpy
