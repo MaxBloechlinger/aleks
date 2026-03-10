@@ -7,7 +7,6 @@ def handle_command(text):
     if "time" in text:
         return "I cannot tell the time yet."
     
-    
     if "who" in text:
         return "I'm Aleks, your assistant."
     
