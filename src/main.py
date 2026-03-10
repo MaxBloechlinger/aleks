@@ -5,10 +5,18 @@ from assistant.speaker import speak
 
 def main():
     print("Aleks voice assistant started")
+    print("Say 'exit' to stop.\n")
 
-    text = listen()
+    while True:
+        text = listen()
 
-    if text:
+        if not text:
+            continue
+
+        if "exit" in text.lower():
+            speak("Shutting down. Goodbye.")
+            break
+
         response = think(text)
         speak(response)
 
