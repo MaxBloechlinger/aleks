@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def handle_command(text):
     text = text.lower()
 
@@ -5,7 +7,9 @@ def handle_command(text):
         return "Hello Sir"
 
     if "time" in text:
-        return "I cannot tell the time yet."
+        now = datetime.now()
+        current_time = now.strftime("%H:%M")
+        return f"It is {current_time}."
     
     if "who" in text:
         return "I'm Aleks, your assistant."
