@@ -14,15 +14,15 @@ def handle_command(text):
     if "who" in text:
         return "I'm Aleks, your assistant."
 
-    if "day" or "date" in text:
+    if any(word in text for word in ["day", "date"]):   
         now = datetime.now()
         current_day = now.strftime("%A %d. of %B %Y")
         return f"It is {current_day}."
     
-    if "thanks" or "thank" in text:
+    if any(word in text for word in ["thanks", "thank you"]):
         return "You're welcome Sire"
 
-    if "Aleks" or "Alex" in text:
+    if any(word in text for word in ["alex", "aleks"]):
         return "hmm what?"
 
     return "I don't understand yet."
