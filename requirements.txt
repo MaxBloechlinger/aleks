@@ -2,3 +2,4 @@ openai-whisper
 sounddevice
 pyttsx3
 numpy
+requests
