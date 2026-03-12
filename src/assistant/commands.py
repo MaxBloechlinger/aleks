@@ -1,24 +1,5 @@
 from datetime import datetime
-import requests
-
-
-def get_weather():
-    lat = 47.3769
-    lon = 8.5417
-
-    url = (
-        f"https://api.open-meteo.com/v1/forecast?"
-        f"latitude={lat}&longitude={lon}&current_weather=true"
-    )
-
-    r = requests.get(url)
-    data = r.json()
-
-    temp = data["current_weather"]["temperature"]
-    wind = data["current_weather"]["windspeed"]
-
-    return f"It is {temp} degrees Celsius with wind speed {wind} kilometers per hour."
-
+from assistant.weather import get_weather
 
 def handle_command(text):
     text = text.lower()
