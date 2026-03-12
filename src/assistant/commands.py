@@ -24,5 +24,8 @@ def handle_command(text):
 
     if any(word in text for word in ["alex", "aleks"]):
         return "hmm what?"
+    
+    if "weather" in text:
+        pass
 
     return "I don't understand yet."
