@@ -1,5 +1,6 @@
-COMMANDS = []
+from assistant.ai import ask_llm
 
+COMMANDS = []
 
 def register(keywords, handler):
     COMMANDS.append((keywords, handler))
@@ -12,4 +13,5 @@ def handle_command(text):
         if any(word in text for word in keywords):
             return handler(text)
 
-    return "I don't understand yet."
+    # fallback to AI
+    return ask_llm(text)
