@@ -2,11 +2,13 @@ from .router import register
 
 
 def hello(text):
-    return "Hello Sir"
+    return "Hello Sire"
 
 def good_morning(text):
     return "Good Morning Me Lord. May your highness have a splendid Day."
 
+def good_evening(text):
+    return "Good Evening Sire"
 
 def who(text):
     return "I'm Aleks, your assistant."
