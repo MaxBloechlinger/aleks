@@ -7,8 +7,8 @@ Personal voice assistant for Raspberry Pi.
 - Wake word detection
 - Speech recognition
 - Local command handling
-- Smart home control (LEDs etc.)
-- Smart Answering of complex questions using LLMs
+- Smart home control (LEDs, Music etc.)
+- Smart Answering of complex questions using LLMs & Google Search
 
 # Aleks
 
