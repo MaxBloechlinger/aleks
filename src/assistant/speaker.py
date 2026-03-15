@@ -2,11 +2,16 @@ import pyttsx3
 
 engine = pyttsx3.init()
 
-engine.setProperty("rate", 170)
-engine.setProperty("volume", 1.0)
+speaking = False
 
 
 def speak(text):
-    print("Aleks:", text)
+    global speaking
+
+    speaking = True
+    print(f"Aleks: {text}")
+
     engine.say(text)
     engine.runAndWait()
+
+    speaking = False

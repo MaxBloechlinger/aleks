@@ -3,15 +3,23 @@ import numpy as np
 import whisper
 import tempfile
 import wave
+import time
+
+from assistant.speaker import speaking
 
 model = whisper.load_model("base")
 
 
 def listen():
+
+    # wait while Aleks is speaking
+    while speaking:
+        time.sleep(0.1)
+
     print("Listening...")
 
     samplerate = 16000
-    duration = 5  # seconds
+    duration = 5
 
     recording = sd.rec(
         int(duration * samplerate),
@@ -22,7 +30,6 @@ def listen():
 
     sd.wait()
 
-    # save temporary wav file
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
         with wave.open(f.name, "wb") as wf:
             wf.setnchannels(1)
