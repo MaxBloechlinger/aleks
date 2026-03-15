@@ -16,4 +16,5 @@ Offline voice assistant designed to run on Raspberry Pi.
 
 ## Run
 
+source .venv/bin/activate
 python src/main.py
