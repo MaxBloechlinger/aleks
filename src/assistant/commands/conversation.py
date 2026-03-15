@@ -1,14 +1,21 @@
+from datetime import datetime
 from .router import register
 
 
-def hello(text):
-    return "Hello Sire"
+def greet(text):
+    hour = datetime.now().hour
 
-def good_morning(text):
-    return "Good Morning Me Lord. May your highness have a splendid Day."
+    if 5 <= hour < 12:
+        return "Good Morning Sire. May your day be prosperous."
 
-def good_evening(text):
-    return "Good Evening Sire"
+    elif 12 <= hour < 18:
+        return "Good Afternoon Sire."
+
+    elif 18 <= hour < 23:
+        return "Good Evening Sire."
+
+    else:
+        return "Working late tonight, Sire."
 
 def who(text):
     return "I'm Aleks, your assistant."
@@ -18,7 +25,6 @@ def thanks(text):
     return "You're welcome Sire"
 
 
-register(["hello"], hello)
-register(["good morning"], good_morning)
+register(["hello", "hi", "good morning", "good evening", "good afternoon"], greet)
 register(["who"], who)
 register(["thanks", "thank you"], thanks)
