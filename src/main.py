@@ -1,6 +1,6 @@
 from assistant.listener import listen
 from assistant.brain import think
-from assistant.speaker import speak
+from assistant.speaker import speak, stop_speaking
 
 
 def main():
@@ -11,6 +11,10 @@ def main():
         text = listen()
 
         if not text:
+            continue
+
+        if text in ["stop", "wait", "cancel"]:
+            stop_speaking()
             continue
 
         if "exit" in text.lower():

@@ -41,8 +41,14 @@ def listen():
 
     result = model.transcribe(audio_path)
 
-    text = result["text"].strip()
+    text = result["text"].strip().lower()
+
+    # ignore Aleks hearing itself
+    from assistant.speaker import last_spoken_text
+
+    if text and text in last_spoken_text:
+        return ""
 
     print("Heard:", text)
-
     return text
+
