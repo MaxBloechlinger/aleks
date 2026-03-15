@@ -3,3 +3,5 @@ sounddevice
 pyttsx3
 numpy
 requests
+pvporcupine 
+pyaudio
