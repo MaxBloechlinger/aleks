@@ -31,11 +31,9 @@ def main():
                 speak("Shutting down.")
                 return
 
-            # ---- SLEEP COMMAND ----
             if "sleep" in text:
                 speak("Returning to standby.")
                 break
-            # -----------------------
 
             response = think(text)
             speak(response)
