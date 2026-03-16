@@ -31,10 +31,15 @@ def main():
                 speak("Shutting down.")
                 return
 
+            # ---- SLEEP COMMAND ----
+            if "sleep" in text:
+                speak("Returning to standby.")
+                break
+            # -----------------------
+
             response = think(text)
             speak(response)
 
-            # reset session timer after command
             session_start = time.time()
 
         print("Returning to standby...")
