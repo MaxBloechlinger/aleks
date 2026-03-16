@@ -2,12 +2,14 @@ import pvporcupine
 import pyaudio
 import os
 
+
 def wait_for_wake_word():
 
     porcupine = pvporcupine.create(
         access_key=os.environ["PICOVOICE_ACCESS_KEY"],
         keywords=["alexa"]
     )
+
     pa = pyaudio.PyAudio()
 
     stream = pa.open(
@@ -32,3 +34,5 @@ def wait_for_wake_word():
 
     stream.close()
     pa.terminate()
+
+    return True

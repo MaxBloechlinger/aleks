@@ -1,32 +1,43 @@
+import time
 from assistant.listener import listen
 from assistant.brain import think
-from assistant.speaker import speak, stop_speaking
+from assistant.speaker import speak
 from assistant.wakeword import wait_for_wake_word
 
 
+SESSION_TIMEOUT = 8   # seconds Aleks stays active
+
 
 def main():
+
     print("Aleks voice assistant started")
 
     while True:
 
         wait_for_wake_word()
 
-        speak("Yes Sire")
+        speak("Yes Sire.")
 
-        text = listen()
+        session_start = time.time()
 
-        if not text:
-            continue
+        while time.time() - session_start < SESSION_TIMEOUT:
 
-        if "exit" in text:
-            speak("Shutting down.")
-            break
+            text = listen()
 
-        response = think(text)
+            if not text:
+                continue
 
-        speak(response)
+            if "exit" in text:
+                speak("Shutting down.")
+                return
 
+            response = think(text)
+            speak(response)
+
+            # reset session timer after command
+            session_start = time.time()
+
+        print("Returning to standby...")
 
 
 if __name__ == "__main__":
