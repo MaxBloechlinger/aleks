@@ -7,8 +7,9 @@ def wait_for_wake_word():
 
     porcupine = pvporcupine.create(
         access_key=os.environ["PICOVOICE_ACCESS_KEY"],
-        keywords=["alexa"]
+        keyword_paths=["/home/max/Workspace/github/Aleks Pi/aleks/src/assistant/Alex_en_linux_v4_0_0.ppn"]
     )
+    
 
     pa = pyaudio.PyAudio()
 
