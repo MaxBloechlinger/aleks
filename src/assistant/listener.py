@@ -1,94 +1,80 @@
 import sounddevice as sd
 import numpy as np
 import whisper
-import webrtcvad
 import tempfile
 import wave
-import collections
-
-from assistant.speaker import speaking, last_spoken_time
 import time
 
+# load whisper model once
 model = whisper.load_model("base")
 
-vad = webrtcvad.Vad(2)  # 0-3 (higher = more aggressive)
-
-SAMPLE_RATE = 16000
-FRAME_DURATION = 30  # ms
-FRAME_SIZE = int(SAMPLE_RATE * FRAME_DURATION / 1000)
+# --- shared state (imported from speaker) ---
+try:
+    from assistant.speaker import speaking, last_spoken_time, last_spoken_text
+except:
+    speaking = False
+    last_spoken_time = 0
+    last_spoken_text = ""
 
 
 def listen():
 
-    # wait if Aleks is speaking
-    while speaking:
-        time.sleep(0.1)
+    try:
+        samplerate = 16000
+        duration = 4  # slightly shorter = faster response
 
-    # small cooldown to avoid echo
-    while time.time() - last_spoken_time < 1.0:
-        time.sleep(0.1)
+        # --- RECORD ---
+        recording = sd.rec(
+            int(duration * samplerate),
+            samplerate=samplerate,
+            channels=1,
+            dtype="int16"
+        )
 
-    print("Listening...")
+        sd.wait()
 
-    audio_buffer = []
-    ring_buffer = collections.deque(maxlen=10)
+        # --- SAVE TEMP FILE ---
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
+            with wave.open(f.name, "wb") as wf:
+                wf.setnchannels(1)
+                wf.setsampwidth(2)
+                wf.setframerate(samplerate)
+                wf.writeframes(recording.tobytes())
 
-    stream = sd.InputStream(
-        samplerate=SAMPLE_RATE,
-        channels=1,
-        dtype="int16",
-        blocksize=FRAME_SIZE
-    )
+            audio_path = f.name
 
-    with stream:
+        # --- TRANSCRIBE ---
+        result = model.transcribe(audio_path, fp16=False)
+        text = result["text"].strip().lower()
 
-        triggered = False
+        if not text:
+            return None
 
-        while True:
-            frame, _ = stream.read(FRAME_SIZE)
-            frame_bytes = frame.tobytes()
+        now = time.time()
 
-            is_speech = vad.is_speech(frame_bytes, SAMPLE_RATE)
+        # --- FILTER 1: ignore while speaking ---
+        if speaking:
+            return None
 
-            if not triggered:
-                ring_buffer.append((frame_bytes, is_speech))
+        # --- FILTER 2: cooldown after speaking ---
+        if now - last_spoken_time < 1.5:
+            return None
 
-                # start when enough speech detected
-                if sum(1 for _, speech in ring_buffer if speech) > 6:
-                    triggered = True
-                    audio_buffer.extend(f for f, _ in ring_buffer)
-                    ring_buffer.clear()
+        # --- FILTER 3: ignore own voice ---
+        if last_spoken_text:
+            spoken_words = set(last_spoken_text.split())
+            heard_words = set(text.split())
 
-            else:
-                audio_buffer.append(frame_bytes)
-                ring_buffer.append((frame_bytes, is_speech))
+            overlap = spoken_words.intersection(heard_words)
 
-                # stop when silence detected
-                if sum(1 for _, speech in ring_buffer if not speech) > 8:
-                    break
+            if len(overlap) > 2:
+                print("Ignored (self-echo):", text)
+                return None
 
-    if not audio_buffer:
-        return ""
+        print("Heard:", text)
+        return text
 
-    # save temp audio
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
-        with wave.open(f.name, "wb") as wf:
-            wf.setnchannels(1)
-            wf.setsampwidth(2)
-            wf.setframerate(SAMPLE_RATE)
-            wf.writeframes(b"".join(audio_buffer))
-
-        audio_path = f.name
-
-    result = model.transcribe(audio_path, fp16=False)
-
-    text = result["text"].strip().lower()
-
-    print("Heard:", text)
-
-    # filter self-hearing
-    from assistant.speaker import last_spoken_text
-    if text and text in last_spoken_text:
-        return ""
-
-    return text
+    except Exception as e:
+        print("Audio error:", e)
+        time.sleep(0.5)
+        return None
