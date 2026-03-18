@@ -5,7 +5,7 @@ from assistant.speaker import speak
 from assistant.wakeword import wait_for_wake_word
 
 
-SESSION_TIMEOUT = 8   # seconds Aleks stays active
+SESSION_TIMEOUT = 8   #Aleks stays active for 8 seconds
 
 
 def main():
