@@ -23,5 +23,5 @@ def speak(text):
     last_spoken_time = time.time()
 
 
-def stop_speaking():
+def stop():
     engine.stop()

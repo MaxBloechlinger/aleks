@@ -80,7 +80,7 @@ def listen():
 
         audio_path = f.name
 
-    result = model.transcribe(audio_path)
+    result = model.transcribe(audio_path, fp16=False)
 
     text = result["text"].strip().lower()
 
