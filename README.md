@@ -18,3 +18,6 @@ Offline voice assistant designed to run on Raspberry Pi.
 
 source .venv/bin/activate
 python src/main.py
+
+Note:
+Agent hears himself instantly now, need to fix later
