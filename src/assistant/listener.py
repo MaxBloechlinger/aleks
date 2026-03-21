@@ -6,7 +6,7 @@ import wave
 import time
 
 # load whisper model once
-model = whisper.load_model("base")
+model = whisper.load_model("tiny.en")
 
 # --- shared state (imported from speaker) ---
 try:
