@@ -57,7 +57,7 @@ def listen():
             return None
 
         # --- FILTER 2: cooldown after speaking ---
-        if now - last_spoken_time < 1.5:
+        if now - last_spoken_time < 4.0:
             return None
 
         # --- FILTER 3: ignore own voice ---
