@@ -57,8 +57,6 @@ def main():
             except:
                 continue
 
-            text = command_queue.get()
-
             # --- INTERRUPT ---
             if "stop" in text:
                 stop()
