@@ -21,15 +21,15 @@ def listener_loop():
         text = text.lower()
         now = time.time()
 
-        # --- FILTER 1: ignore while speaking ---
+        # FILTER 1: ignore while speaking
         if speaking:
             continue
 
-        # --- FILTER 2: cooldown after speaking ---
+        #  FILTER 2: cooldown after speaking 
         if now - last_spoken_time < 3.0:
             continue
 
-        # --- FILTER 3: ignore similar text ---
+        # FILTER 3: ignore similar text
         if last_spoken_text and any(word in text for word in last_spoken_text.split()):
             print("Ignored (self-echo):", text)
             continue
@@ -57,7 +57,6 @@ def main():
             except:
                 continue
 
-            # --- INTERRUPT ---
             if "stop" in text:
                 stop()
                 continue
