@@ -1,44 +1,40 @@
 import time
 import threading
+from queue import Queue
+
 from assistant.listener import listen
 from assistant.brain import think
-from assistant.speaker import speak, stop, speaking, last_spoken_time, last_spoken_text
+from assistant.speaker import speak, stop
 from assistant.wakeword import wait_for_wake_word
-from queue import Queue
+
 
 command_queue = Queue()
 
+SESSION_TIMEOUT = 8
+listening_enabled = False
 
-SESSION_TIMEOUT = 8   #Aleks stays active for 8 seconds
 
 def listener_loop():
+    global listening_enabled
+
     while True:
+
+        if not listening_enabled:
+            time.sleep(0.1)
+            continue
+
         text = listen()
 
         if not text:
             continue
 
-        text = text.lower()
-        now = time.time()
-
-        # FILTER 1: ignore while speaking
-        if speaking:
-            continue
-
-        #  FILTER 2: cooldown after speaking 
-        if now - last_spoken_time < 3.0:
-            continue
-
-        # FILTER 3: ignore similar text
-        if last_spoken_text and any(word in text for word in last_spoken_text.split()):
-            print("Ignored (self-echo):", text)
-            continue
-
-        print("Queue:", text)
         command_queue.put(text)
 
 
 def main():
+
+    global listening_enabled
+
     threading.Thread(target=listener_loop, daemon=True).start()
 
     print("Aleks voice assistant started")
@@ -46,8 +42,10 @@ def main():
     while True:
 
         wait_for_wake_word()
+
         speak("Yes Sire.")
 
+        listening_enabled = True
         session_start = time.time()
 
         while time.time() - session_start < SESSION_TIMEOUT:
@@ -74,6 +72,7 @@ def main():
 
             session_start = time.time()
 
+        listening_enabled = False
         print("Returning to standby...")
 
 

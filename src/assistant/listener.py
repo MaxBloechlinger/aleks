@@ -1,29 +1,26 @@
 import sounddevice as sd
-import numpy as np
 import whisper
 import tempfile
 import wave
 import time
 
-# load whisper model once
-model = whisper.load_model("tiny.en")
+from assistant.speaker import speaking, last_spoken_time
 
-# --- shared state (imported from speaker) ---
-try:
-    from assistant.speaker import speaking, last_spoken_time, last_spoken_text
-except:
-    speaking = False
-    last_spoken_time = 0
-    last_spoken_text = ""
+model = whisper.load_model("tiny.en")
 
 
 def listen():
 
-    try:
-        samplerate = 16000
-        duration = 4  # slightly shorter = faster response
+    # do not record while Aleks is speaking
+    if speaking or time.time() - last_spoken_time < 3:
+        time.sleep(0.1)
+        return None
 
-        # --- RECORD ---
+    try:
+
+        samplerate = 16000
+        duration = 3
+
         recording = sd.rec(
             int(duration * samplerate),
             samplerate=samplerate,
@@ -33,7 +30,6 @@ def listen():
 
         sd.wait()
 
-        # --- SAVE TEMP FILE ---
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
             with wave.open(f.name, "wb") as wf:
                 wf.setnchannels(1)
@@ -43,33 +39,12 @@ def listen():
 
             audio_path = f.name
 
-        # --- TRANSCRIBE ---
         result = model.transcribe(audio_path, fp16=False)
+
         text = result["text"].strip().lower()
 
         if not text:
             return None
-
-        now = time.time()
-
-        # --- FILTER 1: ignore while speaking ---
-        if speaking:
-            return None
-
-        # --- FILTER 2: cooldown after speaking ---
-        if now - last_spoken_time < 4.0:
-            return None
-
-        # --- FILTER 3: ignore own voice ---
-        if last_spoken_text:
-            spoken_words = set(last_spoken_text.split())
-            heard_words = set(text.split())
-
-            overlap = spoken_words.intersection(heard_words)
-
-            if len(overlap) > 2:
-                print("Ignored (self-echo):", text)
-                return None
 
         print("Heard:", text)
         return text

@@ -3,23 +3,23 @@ import pyaudio
 import os
 
 
+porcupine = pvporcupine.create(
+    access_key=os.environ["PICOVOICE_ACCESS_KEY"],
+    keyword_paths=["/home/max/Workspace/github/Aleks Pi/aleks/src/assistant/Alex_en_linux_v4_0_0.ppn"]
+)
+
+pa = pyaudio.PyAudio()
+
+stream = pa.open(
+    rate=porcupine.sample_rate,
+    channels=1,
+    format=pyaudio.paInt16,
+    input=True,
+    frames_per_buffer=porcupine.frame_length
+)
+
+
 def wait_for_wake_word():
-
-    porcupine = pvporcupine.create(
-        access_key=os.environ["PICOVOICE_ACCESS_KEY"],
-        keyword_paths=["/home/max/Workspace/github/Aleks Pi/aleks/src/assistant/Alex_en_linux_v4_0_0.ppn"]
-    )
-    
-
-    pa = pyaudio.PyAudio()
-
-    stream = pa.open(
-        rate=porcupine.sample_rate,
-        channels=1,
-        format=pyaudio.paInt16,
-        input=True,
-        frames_per_buffer=porcupine.frame_length
-    )
 
     print("Waiting for wake word...")
 
@@ -31,9 +31,4 @@ def wait_for_wake_word():
 
         if result >= 0:
             print("Wake word detected")
-            break
-
-    stream.close()
-    pa.terminate()
-
-    return True
+            return True

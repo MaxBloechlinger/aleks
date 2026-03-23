@@ -5,15 +5,12 @@ engine = pyttsx3.init()
 
 speaking = False
 last_spoken_time = 0
-last_spoken_text = ""
 
 
 def speak(text):
-    global speaking, last_spoken_time, last_spoken_text
+    global speaking, last_spoken_time
 
     speaking = True
-    last_spoken_text = text.lower()
-
     print(f"Aleks: {text}")
 
     engine.say(text)
@@ -24,4 +21,6 @@ def speak(text):
 
 
 def stop():
+    global speaking
     engine.stop()
+    speaking = False
