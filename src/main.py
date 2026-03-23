@@ -45,6 +45,8 @@ def main():
 
         speak("Yes Sire.")
 
+        time.sleep(1.2) #prevent reaction to Yes Sire
+
         listening_enabled = True
         session_start = time.time()
 
