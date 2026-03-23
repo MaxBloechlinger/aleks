@@ -4,23 +4,27 @@ import tempfile
 import wave
 import time
 
-from assistant.speaker import speaking, last_spoken_time
+from assistant.speaker import speaking_event, last_spoken_time
 
 model = whisper.load_model("tiny.en")
 
 
 def listen():
 
-    # do not record while Aleks is speaking
-    if speaking or time.time() - last_spoken_time < 3:
+    # hard block while speaking
+    if speaking_event.is_set():
         time.sleep(0.1)
         return None
 
+    # cooldown after speech
+    if time.time() - last_spoken_time < 2.5:
+        time.sleep(0.1)
+        return None
+
+    samplerate = 16000
+    duration = 2.5
+
     try:
-
-        samplerate = 16000
-        duration = 3
-
         recording = sd.rec(
             int(duration * samplerate),
             samplerate=samplerate,
@@ -29,6 +33,10 @@ def listen():
         )
 
         sd.wait()
+
+        # speaking started while recording
+        if speaking_event.is_set():
+            return None
 
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
             with wave.open(f.name, "wb") as wf:

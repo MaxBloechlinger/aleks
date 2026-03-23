@@ -1,26 +1,27 @@
 import pyttsx3
 import time
+import threading
 
 engine = pyttsx3.init()
 
-speaking = False
+speaking_event = threading.Event()
 last_spoken_time = 0
 
 
 def speak(text):
-    global speaking, last_spoken_time
+    global last_spoken_time
 
-    speaking = True
+    speaking_event.set()
+
     print(f"Aleks: {text}")
 
     engine.say(text)
     engine.runAndWait()
 
-    speaking = False
     last_spoken_time = time.time()
+    speaking_event.clear()
 
 
 def stop():
-    global speaking
     engine.stop()
-    speaking = False
+    speaking_event.clear()
