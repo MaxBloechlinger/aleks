@@ -20,5 +20,5 @@ source .venv/bin/activate
 python src/main.py
 
 Note:
-Agent hears himself instantly now, need to fix later
 Also reintroduce VAD asap
+Make voice deeper
