@@ -21,5 +21,4 @@ python src/main.py
 
 Note:
 Also reintroduce VAD asap
-Make voice deeper
 make numbers not russian or introduce real voice model
