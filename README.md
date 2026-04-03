@@ -8,7 +8,7 @@ Personal voice assistant for Raspberry Pi.
 - Speech recognition
 - Local command handling
 - Smart home control (LEDs, Music etc.)
-- Smart Answering of complex questions using LLMs & Google Search
+- Smart Answering of complex questions using LLMs
 
 # Aleks
 
