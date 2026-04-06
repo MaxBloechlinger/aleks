@@ -12,7 +12,7 @@ Personal voice assistant for Raspberry Pi.
 
 # Aleks
 
-Offline voice assistant designed to run on Raspberry Pi.
+Offline voice assistant designed to run on Raspberry Pi & Arch Linux.
 
 ## Run
 
